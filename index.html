@@ -58,36 +58,29 @@
     .links a { display: block; padding: 13px 12px; font-size: 1rem; }
   }
 
-  /* ================= Hero slideshow ================= */
-  .hero { position: relative; height: min(88vh, 720px); min-height: 520px; color: #fff; overflow: hidden; background: var(--navy); }
-  .slide { position: absolute; inset: 0; opacity: 0; transition: opacity 1.4s ease; }
-  .slide.on { opacity: 1; }
-  .slide img { width: 100%; height: 100%; object-fit: cover; transform: scale(1.06); transition: transform 7s ease-out; }
-  .slide.on img { transform: scale(1); }
-  .hero::after {
-    content: ""; position: absolute; inset: 0;
-    background: linear-gradient(90deg, rgba(11,42,60,.85) 0%, rgba(11,42,60,.55) 45%, rgba(11,42,60,.1) 100%),
-                linear-gradient(0deg, rgba(11,42,60,.6) 0%, transparent 35%);
-  }
-  .hero-content { position: relative; z-index: 2; height: 100%; display: flex; flex-direction: column; justify-content: center; padding-top: var(--nav-h); }
-  .eyebrow { display: inline-flex; align-items: center; gap: 8px; font-size: .85rem; letter-spacing: .4px; color: #d5e7ee;
-    background: rgba(255,255,255,.12); border: 1px solid rgba(255,255,255,.2); padding: 6px 12px; border-radius: 999px; width: fit-content; }
+  /* ================= Banner ================= */
+  .banner { position: relative; color: #fff; overflow: hidden; background: var(--navy); padding: calc(var(--nav-h) + 28px) 0 30px; }
+  .banner .bg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center 60%; }
+  .banner::after { content: ""; position: absolute; inset: 0;
+    background: linear-gradient(90deg, rgba(11,42,60,.92) 0%, rgba(11,42,60,.7) 50%, rgba(11,42,60,.35) 100%); }
+  .banner-inner { position: relative; z-index: 2; display: flex; align-items: center; justify-content: space-between; gap: 24px; flex-wrap: wrap; }
+  .eyebrow { display: inline-flex; align-items: center; gap: 8px; font-size: .8rem; letter-spacing: .4px; color: #d5e7ee;
+    background: rgba(255,255,255,.12); border: 1px solid rgba(255,255,255,.2); padding: 5px 11px; border-radius: 999px; }
   .dot { width: 8px; height: 8px; border-radius: 50%; background: #4fd1a5; animation: pulse 2s infinite; }
   @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(79,209,165,.6); } 70% { box-shadow: 0 0 0 8px rgba(79,209,165,0); } 100% { box-shadow: 0 0 0 0 rgba(79,209,165,0); } }
-  .hero h1 { font-size: clamp(2.4rem, 6vw, 4.2rem); line-height: 1.05; margin: 18px 0 14px; max-width: 640px; }
-  .hero p.lead { font-size: clamp(1rem, 2vw, 1.18rem); color: #e2edf1; max-width: 520px; line-height: 1.55; margin: 0 0 26px; }
-  .hero-actions { display: flex; flex-wrap: wrap; gap: 12px; }
-  .btn { display: inline-flex; align-items: center; gap: 8px; border: 0; cursor: pointer; font: inherit; font-weight: 700; text-decoration: none;
-    padding: 13px 20px; border-radius: 12px; transition: transform .1s, background .15s, filter .15s; }
-  .btn:active { transform: scale(.97); }
-  .btn-primary { background: var(--sand); color: var(--navy); } .btn-primary:hover { filter: brightness(1.05); }
-  .btn-ghost { background: rgba(255,255,255,.12); color: #fff; border: 1px solid rgba(255,255,255,.35); } .btn-ghost:hover { background: rgba(255,255,255,.2); }
-  .hero-wind { margin-top: 30px; display: flex; gap: 22px; flex-wrap: wrap; font-size: .9rem; color: #d5e7ee; }
-  .hero-wind b { display: block; font-size: 1.6rem; color: #fff; font-family: "DM Serif Display", Georgia, serif; font-weight: 400; }
-  .dots { position: absolute; z-index: 3; bottom: 22px; right: 24px; display: flex; gap: 8px; }
-  .dots button { width: 10px; height: 10px; border-radius: 999px; border: 0; background: rgba(255,255,255,.45); cursor: pointer; padding: 0; transition: width .3s, background .3s; }
-  .dots button.on { width: 28px; background: #fff; }
-  .caption { position: absolute; z-index: 3; bottom: 22px; left: 24px; font-size: .78rem; color: rgba(255,255,255,.8); }
+  .banner h1 { font-size: clamp(1.9rem, 4.5vw, 2.8rem); line-height: 1.1; margin: 12px 0 8px; }
+  .banner p.lead { margin: 0; color: #dbe9ef; max-width: 520px; line-height: 1.5; }
+  .pills { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
+  .pill { display: inline-flex; align-items: center; gap: 7px; font-size: .84rem; background: rgba(255,255,255,.1); border: 1px solid rgba(255,255,255,.22); padding: 7px 11px; border-radius: 10px; color: #eef6f9; }
+  .pill svg { flex-shrink: 0; }
+  .now { background: rgba(11,42,60,.55); border: 1px solid rgba(255,255,255,.2); border-radius: 14px; padding: 14px 18px; min-width: 210px; backdrop-filter: blur(4px); }
+  .now small { display: block; font-size: .74rem; text-transform: uppercase; letter-spacing: 1.1px; color: #b9d3df; }
+  .now b { font-family: "DM Serif Display", Georgia, serif; font-weight: 400; font-size: 2.3rem; line-height: 1.1; }
+  .now span { color: #d5e7ee; font-size: .88rem; }
+  .now .row2 { display: flex; gap: 14px; margin-top: 6px; font-size: .82rem; color: #d5e7ee; }
+  .now .cta { display: inline-block; margin-top: 12px; background: var(--sand); color: var(--navy); font-weight: 700; text-decoration: none; padding: 8px 14px; border-radius: 10px; font-size: .88rem; }
+  .now .cta:hover { filter: brightness(1.05); }
+  @media (max-width: 640px) { .now { width: 100%; } .banner { padding-bottom: 24px; } }
 
   /* ================= Sections ================= */
   section.block { padding: 64px 0; }
@@ -197,7 +190,7 @@
 <body>
 
 <!-- ================= Navigation ================= -->
-<nav class="nav" id="nav" aria-label="Main">
+<nav class="nav solid" id="nav" aria-label="Main">
   <div class="container">
     <a class="brand" href="#top" aria-label="Ask Dockside home">
       <span class="logo" aria-hidden="true">
@@ -218,48 +211,37 @@
 </nav>
 
 <!-- ================= Hero ================= -->
-<header class="hero" id="top">
-  <div class="slide on" data-caption="Kayaking · photo by Rune Haugseng on Unsplash">
-    <img src="https://images.unsplash.com/photo-1689841667551-eeaee48f2247?auto=format&fit=crop&w=1800&q=70" alt="A group of people paddling kayaks together on a river">
-  </div>
-  <div class="slide" data-caption="Dragon boat · photo by Joseph Corl on Unsplash">
-    <img src="https://images.unsplash.com/photo-1747326842329-fa63e8748fc4?auto=format&fit=crop&w=1800&q=70" alt="A dragon boat crew paddling in sync" loading="lazy">
-  </div>
-  <div class="slide" data-caption="Paddleboarding · photo by Margo Evardson on Unsplash">
-    <img src="https://images.unsplash.com/photo-1772802204154-759a14062a06?auto=format&fit=crop&w=1800&q=70" alt="Two friends sitting on a paddleboard by a pier" loading="lazy">
-  </div>
-  <div class="slide" data-caption="Paddleboarding · photo by Erik Fabian on Unsplash">
-    <img src="https://images.unsplash.com/photo-1765737410226-821698e82cd9?auto=format&fit=crop&w=1800&q=70" alt="A paddleboarder on deep blue water seen from above" loading="lazy">
-  </div>
-
-  <div class="container hero-content">
-    <span class="eyebrow"><span class="dot"></span> Live at Grand Canal Dock, Dublin</span>
-    <h1 class="serif">Get out on the water at Dockside</h1>
-    <p class="lead">Paddleboards, kayaks, a dragon boat, the wakeboard cable and a floating sauna. Ask what's on, what it costs, and whether the wind lets your session run.</p>
-    <div class="hero-actions">
-      <a class="btn btn-primary" href="#chat">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-        Chat with us
-      </a>
-      <a class="btn btn-ghost" href="#activities">See activities</a>
+<header class="banner" id="top">
+  <img class="bg" src="https://images.unsplash.com/photo-1565882135296-49e76ca5b2fd?auto=format&fit=crop&w=1800&q=70"
+       alt="" aria-hidden="true"
+       onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1689841667551-eeaee48f2247?auto=format&fit=crop&w=1800&q=70';">
+  <div class="container banner-inner">
+    <div>
+      <span class="eyebrow"><span class="dot"></span> Live at Grand Canal Dock, Dublin</span>
+      <h1 class="serif">Ask Dockside</h1>
+      <p class="lead">Your watersports assistant for Dockside Paddle Co. Ask about any session and get today's price, places left and whether the wind lets it run.</p>
+      <div class="pills">
+        <span class="pill"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M3 9h18M8 2v4M16 2v4"/></svg>Live timetable</span>
+        <span class="pill"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8h11a3 3 0 1 0-3-3M3 12h16a3 3 0 1 1-3 3M3 16h8"/></svg>Live wind check</span>
+        <span class="pill"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l8 4v5c0 5-3.5 8-8 9-4.5-1-8-4-8-9V7z"/><path d="M9 12l2 2 4-4"/></svg>Checked data, no guessing</span>
+      </div>
     </div>
-    <div class="hero-wind" aria-live="polite">
-      <div><b id="h-wind">--</b>km/h wind now</div>
-      <div><b id="h-gust">--</b>km/h gusts</div>
-      <div><b id="h-temp">--</b>°C at the dock</div>
+    <div class="now" aria-live="polite">
+      <small>Wind at the dock now</small>
+      <b id="h-wind">--</b> <span>km/h</span>
+      <div class="row2"><div>Gusts <strong id="h-gust">--</strong></div><div>Temp <strong id="h-temp">--</strong>°C</div></div>
+      <a class="cta" href="#chat">Ask a question →</a>
     </div>
   </div>
-  <div class="caption" id="caption">Kayaking · photo by Rune Haugseng on Unsplash</div>
-  <div class="dots" id="dots" role="tablist" aria-label="Choose photo"></div>
 </header>
 
 <main>
 <!-- ================= Chat ================= -->
-<section class="block" id="chat">
+<section class="block" id="chat" style="padding-top:36px">
   <div class="container">
     <div class="section-head">
       <div>
-        <h2 class="serif">Ask Dockside</h2>
+        <h2 class="serif">Chat with the assistant</h2>
         <p>Every answer is built from today's live timetable and the live weather at the dock, checked fresh for each question.</p>
       </div>
     </div>
@@ -392,7 +374,7 @@
 <footer>
   <div class="container">
     Dockside Paddle Co. is fictional; sessions are simulated for teaching. Weather data: <a href="https://open-meteo.com" target="_blank" rel="noopener">Open-Meteo</a> (CC BY 4.0).
-    Photos from <a href="https://unsplash.com" target="_blank" rel="noopener">Unsplash</a> by Rune Haugseng, Joseph Corl, Margo Evardson, Erik Fabian, Luke Bender and Marek Lumi.
+    Photos from <a href="https://unsplash.com" target="_blank" rel="noopener">Unsplash</a> by Gadiel Lazcano (banner), Rune Haugseng, Joseph Corl, Margo Evardson, Erik Fabian, Luke Bender and Marek Lumi.
   </div>
 </footer>
 
@@ -625,33 +607,12 @@ guards.addEventListener("change", () => {
 document.getElementById("clear").addEventListener("click", () => { log.innerHTML = ""; history = []; addRow("bot", WELCOME); });
 
 // If a photo ever fails to load, hide it and show the colour background instead
-document.querySelectorAll("img").forEach(img => img.addEventListener("error", () => { img.style.visibility = "hidden"; }));
+document.querySelectorAll("img:not(.bg)").forEach(img => img.addEventListener("error", () => { img.style.visibility = "hidden"; }));
 
 addRow("bot", WELCOME);
 fetchFresh(WEATHER_URL, true).then(showWeather).catch(() => {
   document.getElementById("w-time").textContent = "Weather will load with your first question.";
 });
-
-// ===================== Hero slideshow =====================
-const slides = [...document.querySelectorAll(".slide")];
-const dotsBox = document.getElementById("dots");
-const caption = document.getElementById("caption");
-let current = 0, timer;
-slides.forEach((s, i) => {
-  const b = document.createElement("button");
-  b.setAttribute("aria-label", `Show photo ${i + 1}`);
-  b.addEventListener("click", () => { go(i); restart(); });
-  dotsBox.appendChild(b);
-});
-function go(i) {
-  slides[current].classList.remove("on"); dotsBox.children[current].classList.remove("on");
-  current = (i + slides.length) % slides.length;
-  slides[current].classList.add("on"); dotsBox.children[current].classList.add("on");
-  caption.textContent = slides[current].dataset.caption;
-}
-function restart() { clearInterval(timer); if (!matchMedia("(prefers-reduced-motion: reduce)").matches) timer = setInterval(() => go(current + 1), 6000); }
-dotsBox.children[0].classList.add("on");
-restart();
 
 // ===================== Navigation =====================
 const nav = document.getElementById("nav");
@@ -669,10 +630,10 @@ links.querySelectorAll("a").forEach(a => a.addEventListener("click", () => { lin
 fab.addEventListener("click", () => { chatSection.scrollIntoView({ behavior: "smooth" }); setTimeout(() => input.focus(), 500); });
 
 function onScroll() {
-  nav.classList.toggle("solid", window.scrollY > 40 || links.classList.contains("open"));
+  
   const r = chatSection.getBoundingClientRect();
   const chatVisible = r.top < innerHeight * .6 && r.bottom > innerHeight * .4;
-  fab.classList.toggle("show", window.scrollY > innerHeight * .6 && !chatVisible);
+  fab.classList.toggle("show", window.scrollY > 300 && !chatVisible);
 }
 addEventListener("scroll", onScroll, { passive: true });
 onScroll();
