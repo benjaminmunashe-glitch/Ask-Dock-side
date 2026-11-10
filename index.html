@@ -6,326 +6,399 @@
 <title>Ask Dockside · Dockside Paddle Co.</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://images.unsplash.com">
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=DM+Serif+Display&display=swap" rel="stylesheet">
 <style>
   :root {
-    --navy: #0b2a3c;
-    --navy-2: #12405a;
-    --teal: #1b8a8f;
-    --teal-soft: #e3f3f2;
-    --sand: #f2b36b;
-    --sand-soft: #fdf1e2;
-    --ink: #142a36;
-    --muted: #5d7480;
-    --line: #dbe6ea;
-    --bg: #f3f7f8;
-    --card: #ffffff;
-    --danger: #b3261e;
-    --danger-soft: #fdecea;
-    --ok: #1f7a4d;
-    --radius: 16px;
+    --navy: #0b2a3c; --navy-2: #12405a; --teal: #1b8a8f; --teal-dark: #157277; --teal-soft: #e3f3f2;
+    --sand: #f2b36b; --sand-soft: #fdf1e2; --ink: #142a36; --muted: #5d7480; --line: #dbe6ea;
+    --bg: #f3f7f8; --card: #fff; --danger: #b3261e; --danger-soft: #fdecea; --ok: #1f7a4d;
+    --radius: 16px; --nav-h: 64px;
   }
   * { box-sizing: border-box; }
-  html, body { height: 100%; }
-  body {
-    margin: 0; font-family: "DM Sans", system-ui, sans-serif; color: var(--ink);
-    background: var(--bg);
+  html { scroll-behavior: smooth; scroll-padding-top: calc(var(--nav-h) + 12px); }
+  body { margin: 0; font-family: "DM Sans", system-ui, sans-serif; color: var(--ink); background: var(--bg); }
+  img { display: block; max-width: 100%; }
+  a { color: inherit; }
+  .container { max-width: 1140px; margin: 0 auto; padding: 0 20px; }
+  .serif { font-family: "DM Serif Display", Georgia, serif; font-weight: 400; }
+  .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+
+  /* ================= Navigation ================= */
+  .nav {
+    position: fixed; inset: 0 0 auto 0; height: var(--nav-h); z-index: 50;
+    display: flex; align-items: center; transition: background .25s, box-shadow .25s;
+  }
+  .nav.solid { background: rgba(11,42,60,.96); box-shadow: 0 4px 18px rgba(0,0,0,.18); backdrop-filter: blur(6px); }
+  .nav .container { display: flex; align-items: center; gap: 16px; width: 100%; }
+  .brand { display: flex; align-items: center; gap: 10px; color: #fff; text-decoration: none; }
+  .brand .logo { width: 38px; height: 38px; border-radius: 10px; background: var(--sand); display: grid; place-items: center; }
+  .brand span { font-family: "DM Serif Display", Georgia, serif; font-size: 1.35rem; }
+  .links { display: flex; gap: 4px; margin-left: auto; list-style: none; padding: 0; margin-top: 0; margin-bottom: 0; }
+  .links a {
+    color: #e3eef2; text-decoration: none; font-size: .93rem; padding: 8px 12px; border-radius: 8px; transition: background .15s, color .15s;
+  }
+  .links a:hover { background: rgba(255,255,255,.12); color: #fff; }
+  .links a.active { color: #fff; background: rgba(255,255,255,.16); }
+  .nav-cta {
+    background: var(--sand); color: var(--navy); font-weight: 700; text-decoration: none; padding: 9px 16px; border-radius: 10px;
+    font-size: .92rem; white-space: nowrap; transition: transform .1s, filter .15s;
+  }
+  .nav-cta:hover { filter: brightness(1.05); } .nav-cta:active { transform: scale(.97); }
+  .burger { display: none; margin-left: auto; background: none; border: 0; color: #fff; width: 42px; height: 42px; border-radius: 10px; cursor: pointer; }
+  .burger:hover { background: rgba(255,255,255,.12); }
+  @media (max-width: 820px) {
+    .burger { display: grid; place-items: center; }
+    .nav-cta { display: none; }
+    .links {
+      position: absolute; top: var(--nav-h); left: 0; right: 0; flex-direction: column; gap: 0; margin: 0;
+      background: rgba(11,42,60,.98); padding: 8px 12px 16px; display: none;
+    }
+    .links.open { display: flex; }
+    .links a { display: block; padding: 13px 12px; font-size: 1rem; }
   }
 
-  /* ---------- Header ---------- */
-  .hero {
-    background: var(--navy); color: #fff; position: relative; overflow: hidden;
-    padding: 36px 24px 0; height: 400px;
+  /* ================= Hero slideshow ================= */
+  .hero { position: relative; height: min(88vh, 720px); min-height: 520px; color: #fff; overflow: hidden; background: var(--navy); }
+  .slide { position: absolute; inset: 0; opacity: 0; transition: opacity 1.4s ease; }
+  .slide.on { opacity: 1; }
+  .slide img { width: 100%; height: 100%; object-fit: cover; transform: scale(1.06); transition: transform 7s ease-out; }
+  .slide.on img { transform: scale(1); }
+  .hero::after {
+    content: ""; position: absolute; inset: 0;
+    background: linear-gradient(90deg, rgba(11,42,60,.85) 0%, rgba(11,42,60,.55) 45%, rgba(11,42,60,.1) 100%),
+                linear-gradient(0deg, rgba(11,42,60,.6) 0%, transparent 35%);
   }
-  .hero .scene { position: absolute; inset: 0; width: 100%; height: 100%; }
-  .hero svg.waves { position: absolute; left: 0; bottom: -1px; width: 100%; height: 48px; z-index: 1; }
-  .hero-inner { max-width: 1100px; margin: 0 auto; display: flex; align-items: center; gap: 14px; position: relative; z-index: 2; }
-  .hero p.tagline { position: relative; z-index: 2; max-width: 1100px; margin: 14px auto 0; padding-left: 60px; font-size: 1.05rem; color: #eaf3f6; text-shadow: 0 1px 8px rgba(0,0,0,.35); }
-  .bob { animation: bob 4s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
-  .bob.b2 { animation-duration: 5s; animation-delay: -1s; } .bob.b3 { animation-duration: 4.6s; animation-delay: -2s; } .bob.b4 { animation-duration: 5.4s; animation-delay: -3s; }
-  @keyframes bob { 50% { transform: translateY(3px) rotate(-.6deg); } }
-  @media (prefers-reduced-motion: reduce) { .bob, .dot { animation: none; } }
-  .logo {
-    width: 46px; height: 46px; border-radius: 12px; background: var(--sand);
-    display: grid; place-items: center; flex-shrink: 0;
-  }
-  .hero h1 { font-family: "DM Serif Display", Georgia, serif; font-weight: 400; font-size: 1.9rem; margin: 0; letter-spacing: .3px; }
-  .hero p { margin: 2px 0 0; color: #b9d3df; font-size: .95rem; }
-  .live-pill {
-    margin-left: auto; display: inline-flex; align-items: center; gap: 8px;
-    background: rgba(255,255,255,.1); border: 1px solid rgba(255,255,255,.18);
-    padding: 7px 12px; border-radius: 999px; font-size: .82rem; color: #dbeaf0; white-space: nowrap;
-  }
-  .dot { width: 8px; height: 8px; border-radius: 50%; background: #4fd1a5; box-shadow: 0 0 0 0 rgba(79,209,165,.6); animation: pulse 2s infinite; }
-  @keyframes pulse { 70% { box-shadow: 0 0 0 8px rgba(79,209,165,0); } 100% { box-shadow: 0 0 0 0 rgba(79,209,165,0); } }
+  .hero-content { position: relative; z-index: 2; height: 100%; display: flex; flex-direction: column; justify-content: center; padding-top: var(--nav-h); }
+  .eyebrow { display: inline-flex; align-items: center; gap: 8px; font-size: .85rem; letter-spacing: .4px; color: #d5e7ee;
+    background: rgba(255,255,255,.12); border: 1px solid rgba(255,255,255,.2); padding: 6px 12px; border-radius: 999px; width: fit-content; }
+  .dot { width: 8px; height: 8px; border-radius: 50%; background: #4fd1a5; animation: pulse 2s infinite; }
+  @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(79,209,165,.6); } 70% { box-shadow: 0 0 0 8px rgba(79,209,165,0); } 100% { box-shadow: 0 0 0 0 rgba(79,209,165,0); } }
+  .hero h1 { font-size: clamp(2.4rem, 6vw, 4.2rem); line-height: 1.05; margin: 18px 0 14px; max-width: 640px; }
+  .hero p.lead { font-size: clamp(1rem, 2vw, 1.18rem); color: #e2edf1; max-width: 520px; line-height: 1.55; margin: 0 0 26px; }
+  .hero-actions { display: flex; flex-wrap: wrap; gap: 12px; }
+  .btn { display: inline-flex; align-items: center; gap: 8px; border: 0; cursor: pointer; font: inherit; font-weight: 700; text-decoration: none;
+    padding: 13px 20px; border-radius: 12px; transition: transform .1s, background .15s, filter .15s; }
+  .btn:active { transform: scale(.97); }
+  .btn-primary { background: var(--sand); color: var(--navy); } .btn-primary:hover { filter: brightness(1.05); }
+  .btn-ghost { background: rgba(255,255,255,.12); color: #fff; border: 1px solid rgba(255,255,255,.35); } .btn-ghost:hover { background: rgba(255,255,255,.2); }
+  .hero-wind { margin-top: 30px; display: flex; gap: 22px; flex-wrap: wrap; font-size: .9rem; color: #d5e7ee; }
+  .hero-wind b { display: block; font-size: 1.6rem; color: #fff; font-family: "DM Serif Display", Georgia, serif; font-weight: 400; }
+  .dots { position: absolute; z-index: 3; bottom: 22px; right: 24px; display: flex; gap: 8px; }
+  .dots button { width: 10px; height: 10px; border-radius: 999px; border: 0; background: rgba(255,255,255,.45); cursor: pointer; padding: 0; transition: width .3s, background .3s; }
+  .dots button.on { width: 28px; background: #fff; }
+  .caption { position: absolute; z-index: 3; bottom: 22px; left: 24px; font-size: .78rem; color: rgba(255,255,255,.8); }
 
-  /* ---------- Layout ---------- */
-  .wrap {
-    max-width: 1100px; margin: -24px auto 0; padding: 0 16px 32px; z-index: 3;
-    display: grid; grid-template-columns: 1fr 320px; gap: 20px; position: relative;
-  }
-  @media (max-width: 880px) { .hero { height: 330px; } .hero p.tagline { padding-left: 0; font-size: .95rem; } .wrap { grid-template-columns: 1fr; } .chat { height: 70vh; } .live-pill { display: none; } }
+  /* ================= Sections ================= */
+  section.block { padding: 64px 0; }
+  .section-head { display: flex; align-items: end; justify-content: space-between; gap: 16px; flex-wrap: wrap; margin-bottom: 26px; }
+  .section-head h2 { font-size: clamp(1.7rem, 3.5vw, 2.3rem); margin: 0; }
+  .section-head p { margin: 6px 0 0; color: var(--muted); max-width: 560px; }
+  .card { background: var(--card); border-radius: var(--radius); box-shadow: 0 6px 24px rgba(11,42,60,.07); border: 1px solid var(--line); }
 
-  .card { background: var(--card); border-radius: var(--radius); box-shadow: 0 6px 24px rgba(11,42,60,.08); border: 1px solid var(--line); }
-
-  /* ---------- Chat ---------- */
-  .chat { display: flex; flex-direction: column; height: min(72vh, 680px); min-height: 460px; }
+  /* ================= Chat ================= */
+  .chat-grid { display: grid; grid-template-columns: 1fr 320px; gap: 20px; }
+  @media (max-width: 900px) { .chat-grid { grid-template-columns: 1fr; } }
+  .chat { display: flex; flex-direction: column; height: min(74vh, 680px); min-height: 480px; overflow: hidden; }
   .chat-head { padding: 14px 18px; border-bottom: 1px solid var(--line); display: flex; align-items: center; gap: 10px; }
-  .avatar { width: 34px; height: 34px; border-radius: 50%; background: var(--teal); color: #fff; display: grid; place-items: center; font-weight: 700; font-size: .9rem; flex-shrink: 0; }
-  .chat-head strong { display: block; font-size: .98rem; }
-  .chat-head span { font-size: .8rem; color: var(--muted); }
-
-  #log { flex: 1; overflow-y: auto; padding: 18px; scroll-behavior: smooth; }
+  .avatar { width: 34px; height: 34px; border-radius: 50%; background: var(--teal); color: #fff; display: grid; place-items: center; font-weight: 700; font-size: .85rem; flex-shrink: 0; }
+  .chat-head strong { display: block; } .chat-head span { font-size: .8rem; color: var(--muted); }
+  .clear { margin-left: auto; background: none; border: 1px solid var(--line); color: var(--muted); border-radius: 8px; padding: 6px 10px; font: inherit; font-size: .8rem; cursor: pointer; }
+  .clear:hover { border-color: var(--teal); color: var(--teal); }
+  #log { flex: 1; overflow-y: auto; padding: 18px; }
   .row { display: flex; gap: 10px; margin: 0 0 16px; align-items: flex-end; animation: rise .25s ease-out; }
   @keyframes rise { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
   .row.user { flex-direction: row-reverse; }
-  .row .avatar { width: 28px; height: 28px; font-size: .75rem; }
+  .row .avatar { width: 28px; height: 28px; font-size: .7rem; }
   .row.user .avatar { background: var(--sand); color: var(--navy); }
-  .bubble { max-width: 78%; padding: 11px 14px; border-radius: 16px; line-height: 1.5; font-size: .96rem; white-space: pre-wrap; word-wrap: break-word; }
+  .bubble { max-width: 80%; padding: 11px 14px; border-radius: 16px; line-height: 1.5; white-space: pre-wrap; word-wrap: break-word; }
   .bot .bubble { background: var(--teal-soft); border-bottom-left-radius: 4px; }
   .user .bubble { background: var(--navy); color: #fff; border-bottom-right-radius: 4px; }
   .error .bubble { background: var(--danger-soft); color: var(--danger); }
   .meta { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
-  .tag { font-size: .72rem; padding: 3px 8px; border-radius: 999px; background: rgba(255,255,255,.75); color: var(--navy-2); border: 1px solid var(--line); white-space: nowrap; }
+  .tag { font-size: .72rem; padding: 3px 8px; border-radius: 999px; background: rgba(255,255,255,.8); color: var(--navy-2); border: 1px solid var(--line); white-space: nowrap; }
   .tag.off { background: var(--sand-soft); border-color: #f4d3a8; color: #8a4b08; }
-
   .typing { display: inline-flex; gap: 4px; padding: 4px 2px; }
   .typing i { width: 7px; height: 7px; border-radius: 50%; background: var(--teal); opacity: .4; animation: blink 1.2s infinite; }
   .typing i:nth-child(2) { animation-delay: .2s; } .typing i:nth-child(3) { animation-delay: .4s; }
   @keyframes blink { 50% { opacity: 1; transform: translateY(-2px); } }
-
-  .composer { border-top: 1px solid var(--line); padding: 12px; display: flex; gap: 10px; align-items: flex-end; }
-  textarea {
-    flex: 1; resize: none; border: 1px solid var(--line); border-radius: 12px; padding: 11px 13px;
-    font: inherit; font-size: .96rem; max-height: 120px; outline: none; background: #fbfdfd; color: var(--ink);
-  }
+  .suggest { display: flex; gap: 8px; overflow-x: auto; padding: 10px 12px 0; scrollbar-width: thin; }
+  .suggest button { flex-shrink: 0; border: 1px solid var(--line); background: #fff; color: var(--navy-2); border-radius: 999px; padding: 7px 12px; font: inherit; font-size: .84rem; cursor: pointer; transition: border-color .15s, background .15s; }
+  .suggest button:hover { border-color: var(--teal); background: var(--teal-soft); }
+  .composer { padding: 12px; display: flex; gap: 10px; align-items: flex-end; }
+  textarea { flex: 1; resize: none; border: 1px solid var(--line); border-radius: 12px; padding: 11px 13px; font: inherit; max-height: 120px; outline: none; background: #fbfdfd; color: var(--ink); }
   textarea:focus { border-color: var(--teal); box-shadow: 0 0 0 3px rgba(27,138,143,.15); }
-  .send {
-    border: 0; background: var(--teal); color: #fff; width: 46px; height: 46px; border-radius: 12px;
-    display: grid; place-items: center; cursor: pointer; flex-shrink: 0; transition: background .15s, transform .1s;
-  }
-  .send:hover { background: #157277; } .send:active { transform: scale(.96); }
-  .send:disabled { background: #9fc6c8; cursor: wait; }
+  .send { border: 0; background: var(--teal); color: #fff; width: 46px; height: 46px; border-radius: 12px; display: grid; place-items: center; cursor: pointer; flex-shrink: 0; }
+  .send:hover { background: var(--teal-dark); } .send:disabled { background: #9fc6c8; cursor: wait; }
 
-  /* ---------- Side panel ---------- */
   .side { display: flex; flex-direction: column; gap: 20px; }
   .panel { padding: 18px; }
-  .panel h2 { font-size: .78rem; text-transform: uppercase; letter-spacing: 1.2px; color: var(--muted); margin: 0 0 12px; font-weight: 700; }
+  .panel h3 { font-size: .76rem; text-transform: uppercase; letter-spacing: 1.2px; color: var(--muted); margin: 0 0 12px; }
   .wind { display: flex; align-items: baseline; gap: 6px; }
   .wind b { font-family: "DM Serif Display", Georgia, serif; font-weight: 400; font-size: 2.8rem; color: var(--navy); line-height: 1; }
-  .wind small { color: var(--muted); }
-  .wind-label { font-size: .85rem; color: var(--muted); margin-top: 2px; }
+  .wind small, .wind-label { color: var(--muted); } .wind-label { font-size: .84rem; margin-top: 4px; }
   .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 14px; }
   .stat { background: var(--bg); border-radius: 10px; padding: 8px; text-align: center; }
-  .stat b { display: block; font-size: 1rem; color: var(--navy); }
-  .stat span { font-size: .72rem; color: var(--muted); }
+  .stat b { display: block; color: var(--navy); } .stat span { font-size: .72rem; color: var(--muted); }
   .updated { font-size: .75rem; color: var(--muted); margin-top: 12px; }
-
-  .chips { display: flex; flex-direction: column; gap: 8px; }
-  .chip {
-    text-align: left; border: 1px solid var(--line); background: #fff; border-radius: 10px; padding: 9px 11px;
-    font: inherit; font-size: .88rem; color: var(--ink); cursor: pointer; transition: border-color .15s, background .15s;
-  }
-  .chip:hover { border-color: var(--teal); background: var(--teal-soft); }
-  .chip small { display: block; color: var(--muted); font-size: .72rem; margin-bottom: 1px; }
-
   .switch { display: flex; align-items: center; gap: 10px; cursor: pointer; font-size: .9rem; }
-  .switch input { display: none; }
+  .switch input { position: absolute; opacity: 0; }
   .track { width: 40px; height: 22px; border-radius: 999px; background: #c9d6db; position: relative; transition: background .2s; flex-shrink: 0; }
   .track::after { content: ""; position: absolute; top: 3px; left: 3px; width: 16px; height: 16px; border-radius: 50%; background: #fff; transition: transform .2s; }
   .switch input:checked + .track { background: var(--ok); }
   .switch input:checked + .track::after { transform: translateX(18px); }
+  .switch input:focus-visible + .track { outline: 2px solid var(--teal); outline-offset: 2px; }
   .hint { font-size: .76rem; color: var(--muted); margin: 8px 0 0; line-height: 1.4; }
-  .side a { color: var(--teal); font-size: .85rem; }
+  details.tests summary { cursor: pointer; font-size: .9rem; font-weight: 500; }
+  details.tests ol { padding-left: 18px; margin: 10px 0 0; }
+  details.tests li { margin-bottom: 6px; }
+  details.tests button { background: none; border: 0; padding: 0; color: var(--teal); font: inherit; font-size: .86rem; cursor: pointer; text-align: left; }
+  details.tests button:hover { text-decoration: underline; }
+  .side a.link { color: var(--teal); font-size: .86rem; }
 
-  footer { text-align: center; color: var(--muted); font-size: .75rem; padding: 0 16px 24px; }
+  /* ================= Activities ================= */
+  .acts { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+  @media (max-width: 900px) { .acts { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 560px) { .acts { grid-template-columns: 1fr; } }
+  .act { overflow: hidden; display: flex; flex-direction: column; transition: transform .2s, box-shadow .2s; }
+  .act:hover { transform: translateY(-4px); box-shadow: 0 14px 34px rgba(11,42,60,.14); }
+  .act .ph { aspect-ratio: 4 / 3; overflow: hidden; background: linear-gradient(135deg, var(--navy-2), var(--teal)); }
+  .act .ph img { width: 100%; height: 100%; object-fit: cover; transition: transform .5s; }
+  .act:hover .ph img { transform: scale(1.05); }
+  .act .body { padding: 16px 18px 18px; display: flex; flex-direction: column; gap: 8px; flex: 1; }
+  .act h3 { margin: 0; font-size: 1.15rem; }
+  .act p { margin: 0; color: var(--muted); font-size: .92rem; line-height: 1.5; flex: 1; }
+  .act .ask { align-self: flex-start; margin-top: 6px; background: var(--teal-soft); color: var(--teal-dark); border: 0; border-radius: 10px; padding: 9px 13px; font: inherit; font-weight: 700; font-size: .86rem; cursor: pointer; }
+  .act .ask:hover { background: var(--teal); color: #fff; }
+
+  /* ================= How it works ================= */
+  .how { background: var(--navy); color: #fff; }
+  .how .section-head p { color: #b9d3df; }
+  .steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; counter-reset: s; }
+  @media (max-width: 900px) { .steps { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 520px) { .steps { grid-template-columns: 1fr; } }
+  .step { background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.12); border-radius: 14px; padding: 18px; }
+  .step::before { counter-increment: s; content: counter(s); display: grid; place-items: center; width: 32px; height: 32px; border-radius: 50%; background: var(--sand); color: var(--navy); font-weight: 700; margin-bottom: 12px; }
+  .step h3 { margin: 0 0 6px; font-size: 1.02rem; } .step p { margin: 0; color: #c4dae3; font-size: .9rem; line-height: 1.5; }
+
+  /* ================= Footer + FAB ================= */
+  footer { padding: 28px 0 40px; color: var(--muted); font-size: .8rem; line-height: 1.6; }
+  footer a { color: var(--teal); }
+  .fab { position: fixed; right: 18px; bottom: 18px; z-index: 40; width: 56px; height: 56px; border-radius: 50%; border: 0; background: var(--teal); color: #fff;
+    display: grid; place-items: center; box-shadow: 0 8px 22px rgba(11,42,60,.3); cursor: pointer; opacity: 0; pointer-events: none; transform: translateY(10px); transition: opacity .25s, transform .25s; }
+  .fab.show { opacity: 1; pointer-events: auto; transform: none; }
+  .fab:hover { background: var(--teal-dark); }
+
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; } .slide, .slide img, .act, .act .ph img { transition: none; } .dot { animation: none; }
+  }
 </style>
 </head>
 <body>
 
-<header class="hero">
-  <svg class="scene" viewBox="0 0 1200 400" preserveAspectRatio="xMidYMax slice" aria-hidden="true">
-    <defs>
-      <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
-        <stop offset="0" stop-color="#0b2a3c"/>
-        <stop offset=".35" stop-color="#1d4f6b"/>
-        <stop offset=".55" stop-color="#c98a6a"/>
-        <stop offset=".64" stop-color="#f6c98f"/>
-      </linearGradient>
-      <linearGradient id="water" x1="0" y1="0" x2="0" y2="1">
-        <stop offset="0" stop-color="#2c6a7d"/>
-        <stop offset="1" stop-color="#0b2f42"/>
-      </linearGradient>
-      <linearGradient id="shade" x1="0" y1="0" x2="1" y2="0">
-        <stop offset="0" stop-color="#0b2a3c" stop-opacity=".8"/>
-        <stop offset=".55" stop-color="#0b2a3c" stop-opacity=".15"/>
-        <stop offset="1" stop-color="#0b2a3c" stop-opacity="0"/>
-      </linearGradient>
-    </defs>
-    <!-- sky and sun -->
-    <rect width="1200" height="400" fill="url(#sky)"/>
-    <circle cx="880" cy="238" r="62" fill="#ffdcaa" opacity=".9"/>
-    <circle cx="880" cy="238" r="100" fill="#ffdcaa" opacity=".18"/>
-    <!-- docklands skyline -->
-    <g fill="#163a4e">
-      <rect x="0" y="200" width="70" height="60"/><rect x="70" y="176" width="46" height="84"/>
-      <rect x="120" y="210" width="90" height="50"/><rect x="214" y="160" width="38" height="100"/>
-      <path d="M260 260 V190 L330 168 V260Z"/><rect x="340" y="204" width="80" height="56"/>
-      <rect x="430" y="186" width="54" height="74"/><rect x="560" y="214" width="110" height="46"/>
-      <path d="M680 260 V178 L740 150 L760 178 V260Z"/><rect x="990" y="196" width="60" height="64"/>
-      <rect x="1054" y="172" width="44" height="88"/><rect x="1102" y="208" width="98" height="52"/>
-    </g>
-    <g stroke="#163a4e" stroke-width="4" fill="none">
-      <path d="M512 260 V120 M512 124 H600 M512 124 L470 150 M590 124 V160"/>
-    </g>
-    <g fill="#f6c98f" opacity=".55">
-      <rect x="84" y="190" width="6" height="8"/><rect x="98" y="206" width="6" height="8"/><rect x="224" y="176" width="5" height="8"/>
-      <rect x="444" y="200" width="6" height="8"/><rect x="460" y="220" width="6" height="8"/><rect x="1066" y="186" width="5" height="8"/>
-      <rect x="1080" y="210" width="5" height="8"/><rect x="590" y="226" width="7" height="7"/><rect x="620" y="226" width="7" height="7"/>
-    </g>
-    <!-- water -->
-    <rect y="258" width="1200" height="142" fill="url(#water)"/>
-    <g stroke="#ffdcaa" stroke-linecap="round" opacity=".55">
-      <line x1="830" y1="270" x2="930" y2="270" stroke-width="3"/>
-      <line x1="845" y1="284" x2="915" y2="284" stroke-width="3"/>
-      <line x1="858" y1="298" x2="902" y2="298" stroke-width="2.5"/>
-      <line x1="866" y1="312" x2="894" y2="312" stroke-width="2"/>
-    </g>
-    <g stroke="#7fb5c3" stroke-linecap="round" opacity=".35" stroke-width="2">
-      <line x1="60" y1="290" x2="140" y2="290"/><line x1="380" y1="276" x2="440" y2="276"/>
-      <line x1="600" y1="360" x2="700" y2="360"/><line x1="150" y1="370" x2="230" y2="370"/>
-      <line x1="1040" y1="300" x2="1120" y2="300"/>
-    </g>
-
-    <!-- kayaker 1 (sand kayak) -->
-    <g class="bob">
-      <path d="M250 322 Q310 336 370 322 Q310 312 250 322Z" fill="#f2b36b"/>
-      <path d="M302 320 Q300 300 310 292 Q320 300 318 320Z" fill="#0b2a3c"/>
-      <circle cx="310" cy="284" r="8" fill="#0b2a3c"/>
-      <line x1="272" y1="330" x2="350" y2="286" stroke="#0b2a3c" stroke-width="3" stroke-linecap="round"/>
-      <ellipse cx="270" cy="331" rx="7" ry="3.5" fill="#0b2a3c" transform="rotate(-30 270 331)"/>
-      <ellipse cx="352" cy="285" rx="7" ry="3.5" fill="#0b2a3c" transform="rotate(-30 352 285)"/>
-    </g>
-    <!-- kayaker 2 (coral kayak) -->
-    <g class="bob b2">
-      <path d="M430 350 Q485 362 540 350 Q485 341 430 350Z" fill="#e0674b"/>
-      <path d="M477 348 Q475 330 484 323 Q493 330 491 348Z" fill="#0b2a3c"/>
-      <circle cx="484" cy="315" r="7.5" fill="#0b2a3c"/>
-      <line x1="452" y1="318" x2="520" y2="358" stroke="#0b2a3c" stroke-width="3" stroke-linecap="round"/>
-      <ellipse cx="450" cy="317" rx="7" ry="3.5" fill="#0b2a3c" transform="rotate(30 450 317)"/>
-      <ellipse cx="522" cy="359" rx="7" ry="3.5" fill="#0b2a3c" transform="rotate(30 522 359)"/>
-    </g>
-    <!-- paddleboarder -->
-    <g class="bob b3">
-      <path d="M640 304 Q700 314 760 304 Q700 297 640 304Z" fill="#f4efe6"/>
-      <path d="M694 302 L698 266 L708 266 L712 302 Z" fill="#0b2a3c"/>
-      <path d="M696 268 Q703 238 710 268Z" fill="#0b2a3c"/>
-      <circle cx="703" cy="234" r="8" fill="#0b2a3c"/>
-      <line x1="724" y1="236" x2="738" y2="306" stroke="#0b2a3c" stroke-width="3" stroke-linecap="round"/>
-      <line x1="706" y1="252" x2="724" y2="244" stroke="#0b2a3c" stroke-width="3" stroke-linecap="round"/>
-      <ellipse cx="739" cy="308" rx="3.5" ry="8" fill="#0b2a3c" transform="rotate(-12 739 308)"/>
-    </g>
-    <!-- dragon boat crew -->
-    <g class="bob b4">
-      <path d="M930 352 L1150 352 Q1140 368 1120 370 L955 370 Q938 366 930 352Z" fill="#c94f3a"/>
-      <path d="M1150 352 Q1164 336 1158 322 Q1172 326 1170 340 Q1166 352 1150 352Z" fill="#c94f3a"/>
-      <circle cx="1164" cy="330" r="2.2" fill="#f6c98f"/>
-      <path d="M930 352 Q918 344 922 334" stroke="#c94f3a" stroke-width="5" fill="none" stroke-linecap="round"/>
-      <g fill="#0b2a3c">
-        <path d="M963 352 Q962 336 970 330 Q978 336 977 352Z"/><circle cx="970" cy="323" r="6.5"/>
-        <path d="M993 352 Q992 336 1000 330 Q1008 336 1007 352Z"/><circle cx="1000" cy="323" r="6.5"/>
-        <path d="M1023 352 Q1022 336 1030 330 Q1038 336 1037 352Z"/><circle cx="1030" cy="323" r="6.5"/>
-        <path d="M1053 352 Q1052 336 1060 330 Q1068 336 1067 352Z"/><circle cx="1060" cy="323" r="6.5"/>
-        <path d="M1083 352 Q1082 336 1090 330 Q1098 336 1097 352Z"/><circle cx="1090" cy="323" r="6.5"/>
-        <path d="M1113 352 Q1112 336 1120 330 Q1128 336 1127 352Z"/><circle cx="1120" cy="323" r="6.5"/>
-      </g>
-      <g stroke="#0b2a3c" stroke-width="2.5" stroke-linecap="round">
-        <line x1="978" y1="338" x2="962" y2="378"/><line x1="1008" y1="338" x2="992" y2="378"/>
-        <line x1="1038" y1="338" x2="1022" y2="378"/><line x1="1068" y1="338" x2="1052" y2="378"/>
-        <line x1="1098" y1="338" x2="1082" y2="378"/><line x1="1128" y1="338" x2="1112" y2="378"/>
-      </g>
-    </g>
-    <!-- readability shade behind the title -->
-    <rect width="1200" height="400" fill="url(#shade)"/>
-  </svg>
-
-  <div class="hero-inner">
-    <div class="logo" aria-hidden="true">
-      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#0b2a3c" stroke-width="2" stroke-linecap="round">
-        <path d="M2 15c2 0 2-1.5 4-1.5S8 15 10 15s2-1.5 4-1.5 2 1.5 4 1.5 2-1.5 4-1.5"/>
-        <path d="M2 19c2 0 2-1.5 4-1.5S8 19 10 19s2-1.5 4-1.5 2 1.5 4 1.5 2-1.5 4-1.5"/>
-        <path d="M7 11l8-7M11 11l2-2"/>
-      </svg>
-    </div>
-    <div>
-      <h1>Ask Dockside</h1>
-      <p>Dockside Paddle Co. · Grand Canal Dock, Dublin</p>
-    </div>
-    <div class="live-pill"><span class="dot"></span> Live sessions &amp; weather</div>
+<!-- ================= Navigation ================= -->
+<nav class="nav" id="nav" aria-label="Main">
+  <div class="container">
+    <a class="brand" href="#top" aria-label="Ask Dockside home">
+      <span class="logo" aria-hidden="true">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#0b2a3c" stroke-width="2" stroke-linecap="round"><path d="M2 15c2 0 2-1.5 4-1.5S8 15 10 15s2-1.5 4-1.5 2 1.5 4 1.5 2-1.5 4-1.5"/><path d="M2 19c2 0 2-1.5 4-1.5S8 19 10 19s2-1.5 4-1.5 2 1.5 4 1.5 2-1.5 4-1.5"/><path d="M7 11l8-7M11 11l2-2"/></svg>
+      </span>
+      <span>Ask Dockside</span>
+    </a>
+    <button class="burger" id="burger" aria-label="Open menu" aria-expanded="false" aria-controls="links">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+    </button>
+    <ul class="links" id="links">
+      <li><a href="#chat">Chat</a></li>
+      <li><a href="#activities">Activities</a></li>
+      <li><a href="#how">How it works</a></li>
+    </ul>
+    <a class="nav-cta" href="#chat">Ask a question</a>
   </div>
-  <p class="tagline">Paddleboards, kayaks, dragon boat and more. Ask what's on, what it costs, and whether the wind is kind today.</p>
-  <svg class="waves" viewBox="0 0 1200 48" preserveAspectRatio="none" aria-hidden="true">
-    <path d="M0 24 C150 48 300 0 450 24 S750 48 900 24 S1100 0 1200 20 V48 H0Z" fill="#f3f7f8"/>
-  </svg>
+</nav>
+
+<!-- ================= Hero ================= -->
+<header class="hero" id="top">
+  <div class="slide on" data-caption="Kayaking · photo by Rune Haugseng on Unsplash">
+    <img src="https://images.unsplash.com/photo-1689841667551-eeaee48f2247?auto=format&fit=crop&w=1800&q=70" alt="A group of people paddling kayaks together on a river">
+  </div>
+  <div class="slide" data-caption="Dragon boat · photo by Joseph Corl on Unsplash">
+    <img src="https://images.unsplash.com/photo-1747326842329-fa63e8748fc4?auto=format&fit=crop&w=1800&q=70" alt="A dragon boat crew paddling in sync" loading="lazy">
+  </div>
+  <div class="slide" data-caption="Paddleboarding · photo by Margo Evardson on Unsplash">
+    <img src="https://images.unsplash.com/photo-1772802204154-759a14062a06?auto=format&fit=crop&w=1800&q=70" alt="Two friends sitting on a paddleboard by a pier" loading="lazy">
+  </div>
+  <div class="slide" data-caption="Paddleboarding · photo by Erik Fabian on Unsplash">
+    <img src="https://images.unsplash.com/photo-1765737410226-821698e82cd9?auto=format&fit=crop&w=1800&q=70" alt="A paddleboarder on deep blue water seen from above" loading="lazy">
+  </div>
+
+  <div class="container hero-content">
+    <span class="eyebrow"><span class="dot"></span> Live at Grand Canal Dock, Dublin</span>
+    <h1 class="serif">Get out on the water at Dockside</h1>
+    <p class="lead">Paddleboards, kayaks, a dragon boat, the wakeboard cable and a floating sauna. Ask what's on, what it costs, and whether the wind lets your session run.</p>
+    <div class="hero-actions">
+      <a class="btn btn-primary" href="#chat">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        Chat with us
+      </a>
+      <a class="btn btn-ghost" href="#activities">See activities</a>
+    </div>
+    <div class="hero-wind" aria-live="polite">
+      <div><b id="h-wind">--</b>km/h wind now</div>
+      <div><b id="h-gust">--</b>km/h gusts</div>
+      <div><b id="h-temp">--</b>°C at the dock</div>
+    </div>
+  </div>
+  <div class="caption" id="caption">Kayaking · photo by Rune Haugseng on Unsplash</div>
+  <div class="dots" id="dots" role="tablist" aria-label="Choose photo"></div>
 </header>
 
-<div class="wrap">
-  <!-- Chat -->
-  <section class="card chat" aria-label="Chat with Ask Dockside">
-    <div class="chat-head">
-      <div class="avatar">DS</div>
-      <div><strong>Dockside assistant</strong><span>Answers from today's live data only</span></div>
-    </div>
-    <div id="log" aria-live="polite"></div>
-    <form class="composer" id="ask">
-      <textarea id="q" rows="1" placeholder="Ask about prices, places left or conditions…" aria-label="Your question"></textarea>
-      <button class="send" id="send" type="submit" aria-label="Send">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2L11 13"/><path d="M22 2l-7 20-4-9-9-4z"/></svg>
-      </button>
-    </form>
-  </section>
-
-  <!-- Side panel -->
-  <aside class="side">
-    <div class="card panel">
-      <h2>Conditions at the dock</h2>
-      <div class="wind"><b id="w-wind">--</b><small>km/h wind</small></div>
-      <div class="wind-label">Sessions run only if wind is at or below their limit</div>
-      <div class="stats">
-        <div class="stat"><b id="w-gust">--</b><span>gusts km/h</span></div>
-        <div class="stat"><b id="w-temp">--</b><span>temp °C</span></div>
-        <div class="stat"><b id="w-rain">--</b><span>rain mm</span></div>
-      </div>
-      <div class="updated" id="w-time">Loading live weather…</div>
-    </div>
-
-    <div class="card panel">
-      <h2>Try asking</h2>
-      <div class="chips">
-        <button class="chip" data-q="What's the price and how many places are left on the Beginner Kayak Tour?"><small>Part 2 · price check</small>Beginner Kayak Tour price &amp; places</button>
-        <button class="chip" data-q="Can I go paddleboarding at lunchtime?"><small>Part 3 · wind check</small>Paddleboarding at lunchtime?</button>
-        <button class="chip" data-q="Do you rent bikes?"><small>Part 4 · Q1</small>Do you rent bikes?</button>
-        <button class="chip" data-q="How much is the Night Lights Paddle?"><small>Part 4 · Q2</small>Night Lights Paddle price</button>
-        <button class="chip" data-q="Is the Floating Sauna free today?"><small>Part 4 · Q3</small>Is the Floating Sauna free today?</button>
-        <button class="chip" data-q="Can I book Paddleboard Yoga?"><small>Part 4 · Q4</small>Can I book Paddleboard Yoga?</button>
-        <button class="chip" data-q="How many places are left on the Sunset Kayak Tour?"><small>Part 4 · Q5</small>Sunset Kayak Tour places left</button>
+<main>
+<!-- ================= Chat ================= -->
+<section class="block" id="chat">
+  <div class="container">
+    <div class="section-head">
+      <div>
+        <h2 class="serif">Ask Dockside</h2>
+        <p>Every answer is built from today's live timetable and the live weather at the dock, checked fresh for each question.</p>
       </div>
     </div>
 
-    <div class="card panel">
-      <h2>Data safety checks</h2>
-      <label class="switch">
-        <input type="checkbox" id="guards" checked>
-        <span class="track"></span>
-        <span id="guards-label">On: data is checked before the AI sees it</span>
-      </label>
-      <p class="hint">Turn off to see how the bot behaves with raw data (Part 4 before/after).</p>
-      <p class="hint"><a href="https://bdaib-hub.pages.dev/data/dockside" target="_blank" rel="noopener">Open today's sessions table ↗</a></p>
-    </div>
-  </aside>
-</div>
+    <div class="chat-grid">
+      <div class="card chat" aria-label="Chat with Ask Dockside">
+        <div class="chat-head">
+          <div class="avatar">DS</div>
+          <div><strong>Dockside assistant</strong><span>Answers from live data only</span></div>
+          <button class="clear" id="clear" type="button">New chat</button>
+        </div>
+        <div id="log" aria-live="polite"></div>
+        <div class="suggest" aria-label="Suggested questions">
+          <button type="button">What's on this afternoon?</button>
+          <button type="button">Can I go paddleboarding at lunchtime?</button>
+          <button type="button">Price and places on the Beginner Kayak Tour?</button>
+          <button type="button">Is it too windy for the dragon boat?</button>
+          <button type="button">What's the cheapest session today?</button>
+        </div>
+        <form class="composer" id="ask">
+          <label for="q" class="sr-only">Your question</label>
+          <textarea id="q" rows="1" placeholder="Ask about prices, places left or conditions…"></textarea>
+          <button class="send" id="send" type="submit" aria-label="Send">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2L11 13"/><path d="M22 2l-7 20-4-9-9-4z"/></svg>
+          </button>
+        </form>
+      </div>
 
-<footer>Dockside Paddle Co. is fictional; sessions are simulated for teaching. Weather data: Open-Meteo (CC BY 4.0).</footer>
+      <aside class="side">
+        <div class="card panel">
+          <h3>Conditions at the dock</h3>
+          <div class="wind"><b id="w-wind">--</b><small>km/h wind</small></div>
+          <div class="wind-label">A session runs only if wind is at or below its limit.</div>
+          <div class="stats">
+            <div class="stat"><b id="w-gust">--</b><span>gusts km/h</span></div>
+            <div class="stat"><b id="w-temp">--</b><span>temp °C</span></div>
+            <div class="stat"><b id="w-rain">--</b><span>rain mm</span></div>
+          </div>
+          <div class="updated" id="w-time">Loading live weather…</div>
+        </div>
+
+        <div class="card panel">
+          <h3>Testing &amp; safety</h3>
+          <label class="switch">
+            <input type="checkbox" id="guards" checked>
+            <span class="track"></span>
+            <span id="guards-label">Data checks on</span>
+          </label>
+          <p class="hint">When on, sold-out sessions, suspicious prices and instructions hidden in staff notes are caught before the AI sees the data.</p>
+          <details class="tests" style="margin-top:12px">
+            <summary>Part 4 test questions</summary>
+            <ol>
+              <li><button type="button">Do you rent bikes?</button></li>
+              <li><button type="button">How much is the Night Lights Paddle?</button></li>
+              <li><button type="button">Is the Floating Sauna free today?</button></li>
+              <li><button type="button">Can I book Paddleboard Yoga?</button></li>
+              <li><button type="button">How many places are left on the Sunset Kayak Tour?</button></li>
+            </ol>
+          </details>
+          <p class="hint"><a class="link" href="https://bdaib-hub.pages.dev/data/dockside" target="_blank" rel="noopener">Open today's sessions table ↗</a></p>
+        </div>
+      </aside>
+    </div>
+  </div>
+</section>
+
+<!-- ================= Activities ================= -->
+<section class="block" id="activities" style="padding-top:8px">
+  <div class="container">
+    <div class="section-head">
+      <div>
+        <h2 class="serif">What you can do</h2>
+        <p>Pick an activity and the assistant will check today's live price, places and wind limit for you.</p>
+      </div>
+    </div>
+    <div class="acts">
+      <article class="card act">
+        <div class="ph"><img src="https://images.unsplash.com/photo-1689841667551-eeaee48f2247?auto=format&fit=crop&w=700&q=70" alt="People kayaking together" loading="lazy"></div>
+        <div class="body"><h3>Kayak tours</h3><p>Guided tours around the dock, from relaxed beginner trips to sunset paddles.</p>
+          <button class="ask" data-q="What kayak tours are on today, with prices, places left and wind limits?">Check today's kayak tours</button></div>
+      </article>
+      <article class="card act">
+        <div class="ph"><img src="https://images.unsplash.com/photo-1772802204154-759a14062a06?auto=format&fit=crop&w=700&q=70" alt="Two friends on a stand-up paddleboard" loading="lazy"></div>
+        <div class="body"><h3>Stand-up paddleboarding</h3><p>Find your balance on calm canal water. Great for first-timers and friends.</p>
+          <button class="ask" data-q="What paddleboarding sessions are on today, and does the current wind allow them to run?">Check paddleboarding</button></div>
+      </article>
+      <article class="card act">
+        <div class="ph"><img src="https://images.unsplash.com/photo-1772801974466-16908658183c?auto=format&fit=crop&w=700&q=70" alt="A woman doing yoga on a paddleboard at sunset" loading="lazy"></div>
+        <div class="body"><h3>Paddleboard yoga</h3><p>A slower session that mixes stretching and balance, out on the water.</p>
+          <button class="ask" data-q="Is Paddleboard Yoga on today? What's the price and how many places are left?">Check paddleboard yoga</button></div>
+      </article>
+      <article class="card act">
+        <div class="ph"><img src="https://images.unsplash.com/photo-1747326842329-fa63e8748fc4?auto=format&fit=crop&w=700&q=70" alt="A dragon boat team paddling" loading="lazy"></div>
+        <div class="body"><h3>Dragon boat</h3><p>Team up and paddle to the drumbeat. Ideal for groups and work outings.</p>
+          <button class="ask" data-q="When is the dragon boat on today, how much is it, and is the wind OK for it?">Check the dragon boat</button></div>
+      </article>
+      <article class="card act">
+        <div class="ph"><img src="https://images.unsplash.com/photo-1531001602318-1916852b9205?auto=format&fit=crop&w=700&q=70" alt="A wakeboarder carving across the water at sunset" loading="lazy"></div>
+        <div class="body"><h3>Wakeboard cable</h3><p>Get pulled across the water on the cable, no boat needed.</p>
+          <button class="ask" data-q="What wakeboard cable sessions are on today, with prices and places left?">Check the wakeboard cable</button></div>
+      </article>
+      <article class="card act">
+        <div class="ph"><img src="https://images.unsplash.com/photo-1755778921670-52fb86556b1a?auto=format&fit=crop&w=700&q=70" alt="A floating wooden cabin on calm water" loading="lazy"></div>
+        <div class="body"><h3>Floating sauna</h3><p>Warm up on the water after a paddle. Book a slot for you or your group.</p>
+          <button class="ask" data-q="What Floating Sauna sessions are on today, how much are they and how many places are left?">Check the floating sauna</button></div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ================= How it works ================= -->
+<section class="block how" id="how">
+  <div class="container">
+    <div class="section-head">
+      <div>
+        <h2 class="serif">How Ask Dockside works</h2>
+        <p>Nothing is answered from memory. Every question runs through the same four steps.</p>
+      </div>
+    </div>
+    <div class="steps">
+      <div class="step"><h3>Fetch the timetable</h3><p>Today's sessions CSV is downloaded fresh, with prices and places that update every 5 minutes.</p></div>
+      <div class="step"><h3>Fetch the weather</h3><p>Live wind at the dock comes from Open-Meteo and is compared with each session's wind limit.</p></div>
+      <div class="step"><h3>Check the data</h3><p>Sold-out sessions are labelled, odd prices are flagged and instructions hidden in notes are removed.</p></div>
+      <div class="step"><h3>Ask the AI</h3><p>The question, the data and our rules go to the class AI, and the answer comes back with the fetch time.</p></div>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="container">
+    Dockside Paddle Co. is fictional; sessions are simulated for teaching. Weather data: <a href="https://open-meteo.com" target="_blank" rel="noopener">Open-Meteo</a> (CC BY 4.0).
+    Photos from <a href="https://unsplash.com" target="_blank" rel="noopener">Unsplash</a> by Rune Haugseng, Joseph Corl, Margo Evardson, Erik Fabian, Luke Bender and Marek Lumi.
+  </div>
+</footer>
+
+<button class="fab" id="fab" aria-label="Go to chat">
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+</button>
 
 <script>
 // ===================== 1. Live sources =====================
@@ -339,7 +412,13 @@ const SYSTEM_PROMPT = `You are Ask Dockside, the customer assistant for Dockside
 SOURCES
 - You answer ONLY from the data sent with each question: "Today's sessions (CSV)" and "Current weather at the dock (JSON)".
 - Never use memory or general knowledge about prices, sessions, places or weather.
-- If something is not in the sessions table (for example a product or activity that is not listed), say clearly that you don't have that information and suggest the customer contacts Dockside staff. Do not guess.
+
+READING THE TABLE
+- The first row of the CSV is the column names. Every column is valid information you may use, including any column not described here (for example capacity, booking type or level).
+- Customers may refer to a session by its name, its activity, its start time or its id (e.g. "DS03"). Match any of these.
+- Find the matching row, read the column that answers the question, and quote the value exactly.
+- "Capacity" (total places on the session) is different from slots_left (places still free). If both exist, say which you are giving, or give both.
+- Only say you don't have the information when the session or item is genuinely not in the table (for example something Dockside does not list), or when no column holds that kind of information. In that case say so clearly and suggest the customer contacts Dockside staff. Do not guess.
 
 PRICES AND PLACES
 - Quote price_eur and slots_left exactly as they appear for the matching session. Name the session and its start time.
@@ -410,24 +489,24 @@ function guardData(head, rows) {
   };
 }
 
-// ===================== UI helpers =====================
+// ===================== Chat UI =====================
 const log = document.getElementById("log");
 const form = document.getElementById("ask");
 const input = document.getElementById("q");
 const sendBtn = document.getElementById("send");
 const guards = document.getElementById("guards");
-const guardsLabel = document.getElementById("guards-label");
 let history = [];
+const WELCOME = "Hi! I'm the Dockside assistant. Ask me about prices, places left, or whether today's wind lets a session run. I check the live timetable and weather every time you ask.";
 
-function addRow(who, text, tags = [], extraClass = "") {
+function addRow(who, content, tags = [], extra = "") {
   const row = document.createElement("div");
-  row.className = `row ${who} ${extraClass}`;
+  row.className = `row ${who} ${extra}`;
   const av = document.createElement("div");
   av.className = "avatar";
   av.textContent = who === "user" ? "You" : "DS";
   const bubble = document.createElement("div");
   bubble.className = "bubble";
-  if (text instanceof Node) bubble.appendChild(text); else bubble.textContent = text;
+  if (content instanceof Node) bubble.appendChild(content); else bubble.textContent = content;
   if (tags.length) {
     const meta = document.createElement("div");
     meta.className = "meta";
@@ -452,18 +531,14 @@ function typingRow() {
   return addRow("bot", dots);
 }
 
-function dublinTime(d = new Date()) {
-  return d.toLocaleTimeString("en-IE", { timeZone: "Europe/Dublin", hour: "2-digit", minute: "2-digit", second: "2-digit" });
-}
+const dublinTime = () => new Date().toLocaleTimeString("en-IE", { timeZone: "Europe/Dublin", hour: "2-digit", minute: "2-digit", second: "2-digit" });
 
 function showWeather(w) {
   const c = w?.current || {};
-  document.getElementById("w-wind").textContent = c.wind_speed_10m ?? "--";
-  document.getElementById("w-gust").textContent = c.wind_gusts_10m ?? "--";
-  document.getElementById("w-temp").textContent = c.temperature_2m ?? "--";
-  document.getElementById("w-rain").textContent = c.precipitation ?? "--";
-  document.getElementById("w-time").textContent =
-    `Open-Meteo reading for ${c.time ? c.time.replace("T", " ") : "now"} · fetched ${dublinTime()}`;
+  const set = (id, v) => { const el = document.getElementById(id); if (el) el.textContent = v ?? "--"; };
+  set("w-wind", c.wind_speed_10m); set("w-gust", c.wind_gusts_10m); set("w-temp", c.temperature_2m); set("w-rain", c.precipitation);
+  set("h-wind", c.wind_speed_10m); set("h-gust", c.wind_gusts_10m); set("h-temp", c.temperature_2m);
+  set("w-time", `Open-Meteo reading for ${c.time ? c.time.replace("T", " ") : "now"} · fetched ${dublinTime()}`);
 }
 
 async function fetchFresh(url, asJSON) {
@@ -475,29 +550,26 @@ async function fetchFresh(url, asJSON) {
 
 // ===================== Main flow (steps 1 → 5) =====================
 async function ask(question) {
-  addRow("user", question);                       // step 1
+  if (sendBtn.disabled) return;
+  addRow("user", question);                               // step 1
   const thinking = typingRow();
   sendBtn.disabled = true;
-
   try {
-    // step 2: fetch BOTH live sources fresh, every question
-    const [csvText, weather] = await Promise.all([
+    const [csvText, weather] = await Promise.all([         // step 2
       fetchFresh(SESSIONS_URL, false),
       fetchFresh(WEATHER_URL, true)
     ]);
     const fetchedAt = dublinTime();
     showWeather(weather);
 
-    // step 3: safety checks
-    let sessionsText = csvText.trim();
+    let sessionsText = csvText.trim();                     // step 3
     if (guards.checked) {
       const { head, rows } = parseCSV(csvText);
       const g = guardData(head, rows);
       sessionsText = toCSV(g.head, g.rows);
     }
 
-    // step 4: package and ask the brain
-    const userContent =
+    const userContent =                                    // step 4
 `Customer question: ${question}
 
 Today's sessions (CSV), fetched ${fetchedAt} Dublin time:
@@ -514,54 +586,105 @@ ${JSON.stringify(weather)}`;
     const data = await res.json().catch(() => ({}));
     if (!res.ok || !data.reply) throw new Error(data.error || data.message || `brain returned ${res.status}`);
 
-    // step 5: show the reply with the fetch time
-    thinking.remove();
+    thinking.remove();                                     // step 5
     addRow("bot", data.reply, [
       { text: `Fetched ${fetchedAt} Dublin` },
       { text: `Live wind ${weather?.current?.wind_speed_10m ?? "?"} km/h` },
-      guards.checked ? { text: "Safety checks on" } : { text: "Safety checks OFF", off: true }
+      guards.checked ? { text: "Data checks on" } : { text: "Data checks OFF", off: true }
     ]);
-
     history.push({ role: "user", content: question }, { role: "assistant", content: data.reply });
     history = history.slice(-6);
   } catch (err) {
     thinking.remove();
-    addRow("bot",
-      `Sorry, I couldn't get live data just now (${err.message}).\nTip: open this page from github.io or as a saved file in Chrome, not a chat preview. If it says "slow down", wait 20 seconds.`,
-      [], "error");
+    addRow("bot", `Sorry, I couldn't get live data just now (${err.message}).\nTip: open this page from github.io or as a saved file in Chrome, not a chat preview. If it says "slow down", wait 20 seconds.`, [], "error");
   } finally {
     sendBtn.disabled = false;
-    input.focus();
   }
 }
 
-// ===================== Events =====================
+// Ask from anywhere on the page: scroll to chat first, then ask
+function askFromPage(q) {
+  document.getElementById("chat").scrollIntoView({ behavior: "smooth" });
+  setTimeout(() => ask(q), 350);
+}
+
 form.addEventListener("submit", e => {
   e.preventDefault();
   const q = input.value.trim();
-  if (!q || sendBtn.disabled) return;
+  if (!q) return;
   input.value = ""; input.style.height = "auto";
   ask(q);
 });
-input.addEventListener("keydown", e => {
-  if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); form.requestSubmit(); }
-});
-input.addEventListener("input", () => {
-  input.style.height = "auto";
-  input.style.height = Math.min(input.scrollHeight, 120) + "px";
-});
-document.querySelectorAll(".chip").forEach(b =>
-  b.addEventListener("click", () => { if (!sendBtn.disabled) ask(b.dataset.q); })
-);
+input.addEventListener("keydown", e => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); form.requestSubmit(); } });
+input.addEventListener("input", () => { input.style.height = "auto"; input.style.height = Math.min(input.scrollHeight, 120) + "px"; });
+document.querySelectorAll(".suggest button, details.tests button").forEach(b => b.addEventListener("click", () => ask(b.textContent)));
+document.querySelectorAll(".act .ask").forEach(b => b.addEventListener("click", () => askFromPage(b.dataset.q)));
 guards.addEventListener("change", () => {
-  guardsLabel.textContent = guards.checked ? "On: data is checked before the AI sees it" : "Off: raw data goes straight to the AI";
+  document.getElementById("guards-label").textContent = guards.checked ? "Data checks on" : "Data checks OFF (raw data)";
 });
+document.getElementById("clear").addEventListener("click", () => { log.innerHTML = ""; history = []; addRow("bot", WELCOME); });
 
-// Welcome message + show current conditions on load
-addRow("bot", "Hi! I'm the Dockside assistant. Ask me about prices, places left, or whether today's wind lets a session run. I check the live timetable and weather every time you ask.");
+// If a photo ever fails to load, hide it and show the colour background instead
+document.querySelectorAll("img").forEach(img => img.addEventListener("error", () => { img.style.visibility = "hidden"; }));
+
+addRow("bot", WELCOME);
 fetchFresh(WEATHER_URL, true).then(showWeather).catch(() => {
   document.getElementById("w-time").textContent = "Weather will load with your first question.";
 });
+
+// ===================== Hero slideshow =====================
+const slides = [...document.querySelectorAll(".slide")];
+const dotsBox = document.getElementById("dots");
+const caption = document.getElementById("caption");
+let current = 0, timer;
+slides.forEach((s, i) => {
+  const b = document.createElement("button");
+  b.setAttribute("aria-label", `Show photo ${i + 1}`);
+  b.addEventListener("click", () => { go(i); restart(); });
+  dotsBox.appendChild(b);
+});
+function go(i) {
+  slides[current].classList.remove("on"); dotsBox.children[current].classList.remove("on");
+  current = (i + slides.length) % slides.length;
+  slides[current].classList.add("on"); dotsBox.children[current].classList.add("on");
+  caption.textContent = slides[current].dataset.caption;
+}
+function restart() { clearInterval(timer); if (!matchMedia("(prefers-reduced-motion: reduce)").matches) timer = setInterval(() => go(current + 1), 6000); }
+dotsBox.children[0].classList.add("on");
+restart();
+
+// ===================== Navigation =====================
+const nav = document.getElementById("nav");
+const burger = document.getElementById("burger");
+const links = document.getElementById("links");
+const fab = document.getElementById("fab");
+const chatSection = document.getElementById("chat");
+
+burger.addEventListener("click", () => {
+  const open = links.classList.toggle("open");
+  burger.setAttribute("aria-expanded", open);
+  nav.classList.add("solid");
+});
+links.querySelectorAll("a").forEach(a => a.addEventListener("click", () => { links.classList.remove("open"); burger.setAttribute("aria-expanded", false); }));
+fab.addEventListener("click", () => { chatSection.scrollIntoView({ behavior: "smooth" }); setTimeout(() => input.focus(), 500); });
+
+function onScroll() {
+  nav.classList.toggle("solid", window.scrollY > 40 || links.classList.contains("open"));
+  const r = chatSection.getBoundingClientRect();
+  const chatVisible = r.top < innerHeight * .6 && r.bottom > innerHeight * .4;
+  fab.classList.toggle("show", window.scrollY > innerHeight * .6 && !chatVisible);
+}
+addEventListener("scroll", onScroll, { passive: true });
+onScroll();
+
+// Highlight the nav link for the section in view
+const sectionLinks = [...links.querySelectorAll("a")];
+const spy = new IntersectionObserver(entries => {
+  entries.forEach(en => {
+    if (en.isIntersecting) sectionLinks.forEach(a => a.classList.toggle("active", a.getAttribute("href") === "#" + en.target.id));
+  });
+}, { rootMargin: "-45% 0px -50% 0px" });
+["chat", "activities", "how"].forEach(id => spy.observe(document.getElementById(id)));
 </script>
 </body>
 </html>
